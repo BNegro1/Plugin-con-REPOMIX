@@ -37,10 +37,18 @@
     function init() {
         // Configurar el worker de PDF.js
         if (typeof pdfjsLib !== 'undefined') {
-            // Usar la versión del CDN para el worker
-            const workerSrcBase = flipbookData.pdfJSUrl.substring(0, flipbookData.pdfJSUrl.lastIndexOf('/') + 1);
-            const workerSrc = workerSrcBase + 'pdf.worker.min.js';
-            pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+            // Comprobar si flipbookData.pdfJSUrl existe
+            if (flipbookData && flipbookData.pdfJSUrl) {
+                // Usar la versión del CDN para el worker
+                const workerSrcBase = flipbookData.pdfJSUrl.substring(0, flipbookData.pdfJSUrl.lastIndexOf('/') + 1);
+                const workerSrc = workerSrcBase + 'pdf.worker.min.js';
+                pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+            } else if (flipbookData && flipbookData.pluginUrl) {
+                // Fallback al URL del plugin si no hay CDN configurado
+                const workerSrc = flipbookData.pluginUrl + 'js/pdf.worker.min.js';
+                pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+                console.log('Usando worker local:', workerSrc);
+            }
         }
         
         registerEventListeners();

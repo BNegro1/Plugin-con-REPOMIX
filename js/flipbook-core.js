@@ -16,6 +16,15 @@
     let audioElements = {};
     let config = {};
     
+    // Configurar el worker de PDF.js inmediatamente
+    if (typeof pdfjsLib !== 'undefined') {
+        // Usar la versión del CDN para el worker
+        const workerSrcBase = flipbookData.pdfJSUrl.substring(0, flipbookData.pdfJSUrl.lastIndexOf('/') + 1);
+        const workerSrc = workerSrcBase + 'pdf.worker.min.js';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+        console.log('PDF.js worker configurado:', workerSrc);
+    }
+    
     /**
      * Inicializa el flipbook
      *

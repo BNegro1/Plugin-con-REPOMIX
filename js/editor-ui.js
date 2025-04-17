@@ -35,6 +35,14 @@
     
     // Inicialización
     function init() {
+        // Configurar el worker de PDF.js
+        if (typeof pdfjsLib !== 'undefined') {
+            // Usar la versión del CDN para el worker
+            const workerSrcBase = flipbookData.pdfJSUrl.substring(0, flipbookData.pdfJSUrl.lastIndexOf('/') + 1);
+            const workerSrc = workerSrcBase + 'pdf.worker.min.js';
+            pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+        }
+        
         registerEventListeners();
         loadExistingPdf();
     }

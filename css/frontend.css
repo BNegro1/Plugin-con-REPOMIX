@@ -1,16 +1,15 @@
-/* Estilos para el plugin Vibebook Flip - Frontend */
-
-/* Variables CSS */
+/* Estilos para el frontend del plugin Vibebook Flip */
 :root {
-    --fp-container-bg: #ffffff;
-    --fp-nav-bg: #0073aa;
-    --fp-nav-color: #ffffff;
-    --fp-text-color: #555555;
-    --fp-border-color: #dddddd;
-    --fp-shadow-color: rgba(0, 0, 0, 0.15);
+    --fp-container-bg: #f5f5f5;
+    --fp-controls-bg: #0073aa;
+    --fp-controls-color: #fff;
+    --fp-area-url-color: rgba(0, 123, 255, 0.5);
+    --fp-area-youtube-color: rgba(255, 0, 0, 0.5);
+    --fp-area-internal-color: rgba(0, 200, 0, 0.5);
+    --fp-area-audio-color: rgba(255, 193, 7, 0.5);
 }
 
-/* Contenedor principal */
+/* --- Contenedor Principal --- */
 .flipbook-container {
     position: relative;
     margin: 20px auto;
@@ -27,212 +26,257 @@
     z-index: 1;
 }
 
-/* Navegación */
-.vibebook-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    background-color: #f5f5f5;
-    border-bottom: 1px solid var(--fp-border-color);
-}
-
-.vibebook-nav-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 15px;
-    background-color: var(--fp-nav-bg);
-    color: var(--fp-nav-color);
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 14px;
-    transition: background-color 0.2s;
-}
-
-.vibebook-nav-button:hover {
-    background-color: #005177;
-    color: #fff;
-}
-
-.vibebook-page-info {
-    font-size: 14px;
-    color: var(--fp-text-color);
-}
-
-/* Visor de PDF */
+/* Contenedor de páginas */
 .vibebook-pages {
     position: relative;
     flex: 1;
     overflow: hidden;
+    background-color: #fff;
     display: flex;
-    align-items: center;
     justify-content: center;
-    background-color: #f9f9f9;
+    align-items: center;
 }
 
 .vibebook-pages-container {
+    position: relative;
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: center;
-    width: 100%;
     height: 100%;
+    width: 100%;
+    overflow: auto;
 }
 
-/* Modos de visualización */
-.vibebook-pages.single-page-view .vibebook-pages-container {
-    justify-content: center;
-}
-
-.vibebook-pages.double-page-view .vibebook-pages-container {
-    justify-content: space-between;
-}
-
+/* Canvas de páginas */
 .vibebook-page {
     display: block;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.vibebook-page-left {
-    margin-right: 5px;
+/* Modo de una página */
+.single-page-view .vibebook-page {
+    margin: 0 auto;
 }
 
-.vibebook-page-right {
-    margin-left: 5px;
-}
-
-.vibebook-loading {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    align-items: center;
+/* Modo de dos páginas */
+.double-page-view {
     justify-content: center;
-    z-index: 100;
 }
 
-.vibebook-loading-spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
-    border-top: 4px solid #0073aa;
-    width: 40px;
-    height: 40px;
-    animation: vibebook-spin 1s linear infinite;
+.double-page-view .vibebook-page-left {
+    margin-right: 1px;
 }
 
-@keyframes vibebook-spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.double-page-view .vibebook-page-right {
+    margin-left: 1px;
+}
+
+/* Controles de navegación */
+.vibebook-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--fp-controls-bg);
+    color: var(--fp-controls-color);
+}
+
+.vibebook-nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.vibebook-prev,
+.vibebook-next {
+    background-color: transparent;
+    border: none;
+    color: var(--fp-controls-color);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: background-color 0.3s;
+}
+
+.vibebook-prev:hover,
+.vibebook-next:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Información de página */
+.vibebook-page-info {
+    font-size: 14px;
 }
 
 /* Áreas interactivas */
 .vibebook-area {
     position: absolute;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    /* Inicialmente invisible */
     border: 2px solid transparent;
     background-color: transparent;
+    transition: background-color 0.3s, border-color 0.3s;
+    z-index: 50;
 }
 
-/* Solo mostrar al pasar el cursor */
-.vibebook-area:hover {
-    border: 2px solid;
-    background-color: rgba(0, 115, 170, 0.2);
-}
-
-/* Colores específicos para cada tipo de área */
+/* Colores de áreas al pasar el cursor */
 .vibebook-area.url-area:hover {
-    border-color: #0073aa;
-    background-color: rgba(0, 115, 170, 0.2);
+    background-color: var(--fp-area-url-color);
+    border-color: rgba(0, 123, 255, 0.8);
 }
 
 .vibebook-area.youtube-area:hover {
-    border-color: #ff0000;
-    background-color: rgba(255, 0, 0, 0.2);
+    background-color: var(--fp-area-youtube-color);
+    border-color: rgba(255, 0, 0, 0.8);
 }
 
 .vibebook-area.internal-area:hover {
-    border-color: #46b450;
-    background-color: rgba(70, 180, 80, 0.2);
+    background-color: var(--fp-area-internal-color);
+    border-color: rgba(0, 200, 0, 0.8);
 }
 
 .vibebook-area.audio-area:hover {
-    border-color: #ffb900;
-    background-color: rgba(255, 185, 0, 0.2);
+    background-color: var(--fp-area-audio-color);
+    border-color: rgba(255, 193, 7, 0.8);
 }
 
-/* Iconos para áreas */
-.vibebook-area.audio-area .area-icon {
+/* Iconos de áreas */
+.area-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
     opacity: 0;
-    transition: opacity 0.2s;
+    transition: opacity 0.3s;
 }
 
-.vibebook-area.audio-area:hover .area-icon {
+.vibebook-area:hover .area-icon {
     opacity: 1;
 }
 
-/* Audio */
+/* Controles de audio */
 .vibebook-audio-controls {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    border-top: 1px solid var(--fp-border-color);
+    display: none;
+    margin-left: 15px;
 }
 
 .vibebook-audio-toggle {
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 10px;
-    background-color: #f1f1f1;
-    border: 1px solid #ddd;
-    border-radius: 3px;
+    background-color: transparent;
+    border: none;
+    color: var(--fp-controls-color);
     cursor: pointer;
-    font-size: 13px;
-    color: #555;
+    padding: 5px;
 }
 
-.vibebook-audio-toggle:hover {
-    background-color: #e9e9e9;
+.vibebook-audio-toggle.playing {
+    color: #ffcc00;
 }
 
-.vibebook-audio-toggle .dashicons {
-    margin-right: 5px;
+/* Indicador de carga */
+.vibebook-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
 }
 
-/* Mensajes de error */
+.vibebook-loading-spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--fp-controls-bg);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Mensaje de error */
 .vibebook-error {
-    padding: 15px;
-    background-color: #fbeaea;
-    border: 1px solid #dc3232;
-    color: #8a1f1f;
-    margin: 15px 0;
+    padding: 20px;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+}
+
+/* Controles de zoom */
+.vibebook-zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 15px;
+}
+
+.vibebook-zoom-in,
+.vibebook-zoom-out,
+.vibebook-zoom-reset {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: var(--fp-controls-color);
+    cursor: pointer;
+    font-size: 14px;
+    width: 30px;
+    height: 30px;
     border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.vibebook-zoom-reset {
+    width: auto;
+    padding: 0 8px;
+    font-size: 12px;
+}
+
+.vibebook-zoom-in:hover,
+.vibebook-zoom-out:hover,
+.vibebook-zoom-reset:hover {
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Responsive */
-@media screen and (max-width: 782px) {
-    .vibebook-navigation {
-        flex-direction: column;
-        gap: 10px;
+@media (max-width: 768px) {
+    .flipbook-container {
+        height: 70vh;
+    }
+    
+    .vibebook-controls {
+        flex-wrap: wrap;
     }
     
     .vibebook-page-info {
-        order: -1;
-        margin-bottom: 10px;
+        order: 3;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
     }
     
-    .vibebook-pages.double-page-view .vibebook-pages-container {
+    .vibebook-zoom-controls {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .flipbook-container {
+        height: 60vh;
+    }
+    
+    .double-page-view {
         flex-direction: column;
     }
     
-    .vibebook-page-left, 
-    .vibebook-page-right {
+    .double-page-view .vibebook-page-left,
+    .double-page-view .vibebook-page-right {
         margin: 5px 0;
     }
 }

@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Vibebook Flip
+ * Plugin Name: -1) FLIYING BOOK 
  * Plugin URI: https://vibebook.com/
  * Description: Plugin para visualizar PDFs como flipbooks interactivos con áreas interactivas.
- * Version: 1.0.5
+ * Version: 1.0.6
  * Author: Vibebook
  * Author URI: https://vibebook.com/
  * Text Domain: vibebook-flip

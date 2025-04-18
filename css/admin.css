@@ -1,0 +1,371 @@
+/* Estilos para el plugin Vibebook Flip - Admin */
+
+/* Variables CSS */
+:root {
+    --vb-primary: #0073aa;
+    --vb-secondary: #f1f1f1;
+    --vb-text: #444;
+    --vb-border: #ddd;
+    --vb-success: #46b450;
+    --vb-error: #dc3232;
+    --vb-warning: #ffb900;
+}
+
+/* Contenedor principal */
+.vibebook-admin-container {
+    margin: 20px 0;
+    background: #fff;
+    border: 1px solid var(--vb-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+/* Encabezado */
+.vibebook-admin-header {
+    background: var(--vb-primary);
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.vibebook-admin-header h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+/* Pestañas */
+.vibebook-tabs {
+    display: flex;
+    background: var(--vb-secondary);
+    border-bottom: 1px solid var(--vb-border);
+}
+
+.vibebook-tab-link {
+    padding: 12px 20px;
+    color: var(--vb-text);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.vibebook-tab-link:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--vb-primary);
+}
+
+.vibebook-tab-link.active {
+    border-bottom-color: var(--vb-primary);
+    background: #fff;
+    color: var(--vb-primary);
+}
+
+/* Contenido de pestañas */
+.vibebook-tab-content {
+    display: none;
+    padding: 20px;
+}
+
+.vibebook-tab-content.active {
+    display: block;
+}
+
+/* Formularios */
+.vibebook-form-group {
+    margin-bottom: 20px;
+}
+
+.vibebook-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.vibebook-form-group input[type="text"],
+.vibebook-form-group select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--vb-border);
+    border-radius: 3px;
+}
+
+.vibebook-form-group input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.vibebook-button {
+    display: inline-block;
+    padding: 8px 15px;
+    background: var(--vb-primary);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.vibebook-button:hover {
+    background: #005a87;
+}
+
+.vibebook-button.secondary {
+    background: var(--vb-secondary);
+    color: var(--vb-text);
+    border: 1px solid var(--vb-border);
+}
+
+.vibebook-button.secondary:hover {
+    background: #e5e5e5;
+}
+
+/* Editor de PDF */
+.vibebook-editor {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.vibebook-editor-pdf {
+    flex: 1;
+    min-width: 300px;
+    border: 1px solid var(--vb-border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.vibebook-editor-tools {
+    width: 300px;
+}
+
+.vibebook-pdf-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: var(--vb-secondary);
+    border-bottom: 1px solid var(--vb-border);
+}
+
+.vibebook-pdf-toolbar select {
+    margin: 0 10px;
+}
+
+#vibebook-pdf-container {
+    position: relative;
+    min-height: 500px;
+    background: #f9f9f9;
+    overflow: auto;
+}
+
+.vibebook-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.vibebook-loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid var(--vb-primary);
+    width: 30px;
+    height: 30px;
+    animation: vibebook-spin 1s linear infinite;
+}
+
+@keyframes vibebook-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Herramientas */
+.vibebook-tools {
+    margin-bottom: 20px;
+}
+
+.vibebook-tools-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.vibebook-tools-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.vibebook-tool-button {
+    padding: 8px 12px;
+    background: var(--vb-secondary);
+    border: 1px solid var(--vb-border);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.vibebook-tool-button:hover {
+    background: #e5e5e5;
+}
+
+.vibebook-tool-button.active {
+    background: var(--vb-primary);
+    color: #fff;
+    border-color: var(--vb-primary);
+}
+
+.vibebook-tool-options {
+    display: none;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid var(--vb-border);
+    border-radius: 3px;
+    margin-bottom: 15px;
+}
+
+/* Áreas */
+.vibebook-areas {
+    margin-top: 20px;
+}
+
+.vibebook-areas-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.vibebook-areas-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.vibebook-areas-list li {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--vb-border);
+    font-size: 13px;
+}
+
+.vibebook-areas-list li:last-child {
+    border-bottom: none;
+}
+
+/* Áreas interactivas en el editor */
+.vibebook-area {
+    position: absolute;
+    cursor: move;
+    z-index: 50;
+}
+
+.vibebook-area.selected {
+    border-style: dashed !important;
+    z-index: 51;
+}
+
+.vibebook-area.url-area {
+    border-color: var(--vb-primary);
+    background-color: rgba(0, 115, 170, 0.2);
+}
+
+.vibebook-area.youtube-area {
+    border-color: #ff0000;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+.vibebook-area.internal-area {
+    border-color: var(--vb-success);
+    background-color: rgba(70, 180, 80, 0.2);
+}
+
+.vibebook-area.audio-area {
+    border-color: var(--vb-warning);
+    background-color: rgba(255, 185, 0, 0.2);
+}
+
+/* Tabla de ediciones */
+.vibebook-editions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.vibebook-editions-table th,
+.vibebook-editions-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--vb-border);
+}
+
+.vibebook-editions-table th {
+    background: var(--vb-secondary);
+    font-weight: 500;
+}
+
+.vibebook-editions-table tr:hover {
+    background: #f9f9f9;
+}
+
+.vibebook-editions-table .actions {
+    text-align: right;
+}
+
+.vibebook-editions-table .actions a {
+    margin-left: 10px;
+    text-decoration: none;
+}
+
+/* Mensajes */
+.vibebook-message {
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.vibebook-message.success {
+    background: #ecf7ed;
+    border: 1px solid var(--vb-success);
+    color: #2a6f31;
+}
+
+.vibebook-message.error {
+    background: #f9e2e2;
+    border: 1px solid var(--vb-error);
+    color: #a72525;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .vibebook-editor {
+        flex-direction: column;
+    }
+    
+    .vibebook-editor-tools {
+        width: 100%;
+    }
+    
+    .vibebook-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .vibebook-tab-link {
+        flex: 1;
+        text-align: center;
+        padding: 10px;
+    }
+}

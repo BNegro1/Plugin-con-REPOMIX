@@ -1,98 +1,37 @@
 <?php
 /**
- * Plantilla para mostrar el flipbook en el frontend
- *
- * @package FlipbookContraplanoVibe
+ * Plantilla para el frontend del plugin Vibebook Flip
+ * Versión 1.0.2 - Actualizada con soporte para visualización de una o dos páginas
  */
-
-// Si este archivo es llamado directamente, abortar
-if ( ! defined( 'WPINC' ) ) {
-    die;
-}
-
-// Obtener datos del flipbook
-global $wpdb;
-$table_areas = $wpdb->prefix . 'flipbook_areas';
-$table_audio = $wpdb->prefix . 'flipbook_audio';
-
-// Obtener áreas interactivas
-$areas = $wpdb->get_results(
-    $wpdb->prepare(
-        "SELECT * FROM $table_areas WHERE edition_id = %d ORDER BY page_num ASC",
-        $edition_id
-    ),
-    ARRAY_A
-);
-
-// Obtener audio
-$audio_files = $wpdb->get_results(
-    $wpdb->prepare(
-        "SELECT * FROM $table_audio WHERE edition_id = %d ORDER BY page_num ASC",
-        $edition_id
-    ),
-    ARRAY_A
-);
-
-// Convertir áreas y audio a formato JSON para JavaScript
-$areas_json = json_encode($areas ?: []);
-$audio_json = json_encode($audio_files ?: []);
-
-// Obtener la URL del PDF
-$upload_dir = wp_upload_dir();
-$pdf_url = $upload_dir['baseurl'] . '/' . $edition->pdf_path;
-
-// Configuración del contenedor
-$container_id = 'flipbook-container-' . $edition_id;
-$container_style = 'width: ' . esc_attr($atts['width']) . '; height: ' . esc_attr($atts['height']) . '; background-color: ' . esc_attr($atts['background']) . ';';
 ?>
-
-<div class="flipbook-wrapper">
-    <div id="<?php echo esc_attr($container_id); ?>" class="flipbook-container" style="<?php echo $container_style; ?>">
-        <div class="flipbook-loading">
-            <div class="spinner"></div>
-            <p><?php esc_html_e('Cargando flipbook...', 'flipbook-contraplano-vibe'); ?></p>
+<div id="vibebook-flipbook-<?php echo esc_attr($id); ?>" class="vibebook-flipbook flipbook-container" data-id="<?php echo esc_attr($id); ?>">
+    <!-- Navegación -->
+    <div class="vibebook-navigation">
+        <a href="#" class="vibebook-nav-button vibebook-prev">← <?php _e('Anterior', 'vibebook-flip'); ?></a>
+        <div class="vibebook-page-info">
+            <?php _e('Página', 'vibebook-flip'); ?> <span class="vibebook-current-page">1</span> <?php _e('de', 'vibebook-flip'); ?> <span class="vibebook-total-pages">0</span>
         </div>
+        <a href="#" class="vibebook-nav-button vibebook-next"><?php _e('Siguiente', 'vibebook-flip'); ?> →</a>
+    </div>
     
-        <div class="flipbook-viewport">
-            <div class="flipbook-book">
-                <!-- Las páginas se cargarán dinámicamente con JavaScript -->
-            </div>
+    <!-- Visor de PDF -->
+    <div class="vibebook-pages">
+        <div class="vibebook-loading">
+            <div class="vibebook-loading-spinner"></div>
+            <p><?php _e('Cargando...', 'vibebook-flip'); ?></p>
         </div>
-        
-        <div class="flipbook-controls">
-            <button class="flipbook-prev" aria-label="<?php esc_attr_e('Página anterior', 'flipbook-contraplano-vibe'); ?>">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                </svg>
-            </button>
-            
-            <div class="flipbook-pagination">
-                <span class="flipbook-current-page">1</span> / <span class="flipbook-total-pages">0</span>
-            </div>
-            
-            <button class="flipbook-next" aria-label="<?php esc_attr_e('Página siguiente', 'flipbook-contraplano-vibe'); ?>">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                </svg>
-            </button>
-        </div>
+    </div>
+    
+    <!-- Controles de audio (inicialmente ocultos) -->
+    <div class="vibebook-audio-controls" style="display: none;">
+        <a href="#" class="vibebook-audio-toggle">
+            <span class="dashicons dashicons-controls-play"></span>
+            <span class="vibebook-audio-status"><?php _e('Reproducir audio', 'vibebook-flip'); ?></span>
+        </a>
     </div>
 </div>
 
+<!-- Datos del flipbook -->
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-        // Inicializar flipbook cuando el DOM esté listo
-        if (typeof initFlipbook === 'function') {
-            initFlipbook({
-                containerId: '<?php echo esc_js($container_id); ?>',
-                pdfUrl: '<?php echo esc_js($pdf_url); ?>',
-                editionId: <?php echo (int) $edition_id; ?>,
-                editionType: '<?php echo esc_js($edition->type); ?>',
-                areas: <?php echo $areas_json; ?>,
-                audio: <?php echo $audio_json; ?>
-            });
-        } else {
-            console.error('La función initFlipbook no está disponible. Verifica que el archivo JS esté cargado correctamente.');
-        }
-    });
-</script> 
+    var vibeBookFlipData_<?php echo esc_attr($id); ?> = <?php echo json_encode($data); ?>;
+</script>

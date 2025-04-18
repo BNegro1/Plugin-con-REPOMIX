@@ -1,6 +1,6 @@
 /**
  * Script para el panel de administración del plugin Vibebook Flip
- * Versión 1.0.4 - Corregido problema de enrutamiento en la edición
+ * Versión 1.0.5 - Corregido problema de selección de áreas
  */
 (function($) {
     'use strict';
@@ -106,6 +106,13 @@
                         self.pdfUrl = response.data.pdf_url;
                         self.areas = response.data.areas || [];
                         
+                        // Asegurar que cada área tenga un ID único
+                        self.areas.forEach(function(area, index) {
+                            if (!area.id) {
+                                area.id = 'area_' + index + '_' + new Date().getTime();
+                            }
+                        });
+                        
                         // Actualizar título
                         $('#vibebook-editor-title').text('Editando: ' + self.flipbookTitle);
                         
@@ -115,6 +122,9 @@
                         // Ocultar cargando
                         $('#vibebook-editor-loading').hide();
                         $('#vibebook-editor-content').show();
+                        
+                        // Depuración
+                        console.log('Áreas cargadas:', self.areas);
                     } else {
                         alert('Error al cargar el flipbook: ' + response.data);
                     }
@@ -178,6 +188,10 @@
                 // Actualizar clase activa
                 $('.vibebook-tool-button').removeClass('active');
                 $(this).addClass('active');
+                
+                // Limpiar selección actual
+                self.selectedArea = null;
+                $('.vibebook-area').removeClass('selected');
             });
             
             // Seleccionar audio
@@ -197,7 +211,16 @@
                         self.selectedArea.type = 'url';
                         self.selectedArea.target_url = url;
                         self.updateAreasList();
+                        self.renderAreas();
                         self.saveAreas();
+                        
+                        // Limpiar selección
+                        self.selectedArea = null;
+                        $('.vibebook-area').removeClass('selected');
+                        
+                        // Ocultar opciones
+                        $('.vibebook-tool-options').hide();
+                        $('.vibebook-tool-button').removeClass('active');
                     } else if (self.drawingArea) {
                         // Crear nueva área
                         self.createArea('url', { target_url: url });
@@ -220,7 +243,16 @@
                         self.selectedArea.type = 'youtube';
                         self.selectedArea.target_url = url;
                         self.updateAreasList();
+                        self.renderAreas();
                         self.saveAreas();
+                        
+                        // Limpiar selección
+                        self.selectedArea = null;
+                        $('.vibebook-area').removeClass('selected');
+                        
+                        // Ocultar opciones
+                        $('.vibebook-tool-options').hide();
+                        $('.vibebook-tool-button').removeClass('active');
                     } else if (self.drawingArea) {
                         // Crear nueva área
                         self.createArea('youtube', { target_url: url });
@@ -246,7 +278,16 @@
                         self.selectedArea.target_page = page;
                         self.selectedArea.color = color;
                         self.updateAreasList();
+                        self.renderAreas();
                         self.saveAreas();
+                        
+                        // Limpiar selección
+                        self.selectedArea = null;
+                        $('.vibebook-area').removeClass('selected');
+                        
+                        // Ocultar opciones
+                        $('.vibebook-tool-options').hide();
+                        $('.vibebook-tool-button').removeClass('active');
                     } else if (self.drawingArea) {
                         // Crear nueva área
                         self.createArea('internal', { 
@@ -274,7 +315,16 @@
                         self.selectedArea.audio_id = self.selectedAudioId;
                         self.selectedArea.autoplay = autoplay;
                         self.updateAreasList();
+                        self.renderAreas();
                         self.saveAreas();
+                        
+                        // Limpiar selección
+                        self.selectedArea = null;
+                        $('.vibebook-area').removeClass('selected');
+                        
+                        // Ocultar opciones
+                        $('.vibebook-tool-options').hide();
+                        $('.vibebook-tool-button').removeClass('active');
                     } else if (self.drawingArea) {
                         // Crear nueva área
                         self.createArea('audio', { 
@@ -301,6 +351,7 @@
             
             // Eventos para el canvas del PDF
             $('#vibebook-pdf-container').on('mousedown', function(e) {
+                // Si ya hay un área seleccionada, no iniciar dibujo
                 if (!self.pdfDoc || self.selectedArea) {
                     return;
                 }
@@ -326,7 +377,7 @@
             });
             
             $('#vibebook-pdf-container').on('mousemove', function(e) {
-                if (!self.drawingArea) {
+                if (!self.drawingArea || typeof self.drawingArea !== 'boolean') {
                     return;
                 }
                 
@@ -352,7 +403,7 @@
             });
             
             $('#vibebook-pdf-container').on('mouseup', function(e) {
-                if (!self.drawingArea) {
+                if (!self.drawingArea || typeof self.drawingArea !== 'boolean') {
                     return;
                 }
                 
@@ -400,6 +451,7 @@
                 e.preventDefault();
                 
                 var id = $(this).data('id');
+                console.log('Seleccionando área desde lista:', id);
                 self.selectArea(id);
             });
             
@@ -410,12 +462,14 @@
                 self.deleteArea(id);
             });
             
-            // Hacer áreas arrastrables
+            // Hacer áreas arrastrables y seleccionables
             $('#vibebook-pdf-container').on('mousedown', '.vibebook-area', function(e) {
                 e.stopPropagation();
                 
                 var $area = $(this);
                 var areaId = $area.data('id');
+                
+                console.log('Clic en área:', areaId);
                 
                 // Seleccionar área
                 self.selectArea(areaId);
@@ -679,6 +733,11 @@
         renderArea: function(area) {
             var self = this;
             
+            // Verificar que el área tenga ID
+            if (!area.id) {
+                area.id = 'area_' + new Date().getTime() + '_' + Math.floor(Math.random() * 1000);
+            }
+            
             // Crear div
             var $area = $('<div></div>')
                 .addClass('vibebook-area')
@@ -692,7 +751,8 @@
                     height: area.coords[3] + 'px',
                     border: '2px solid',
                     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                    zIndex: 10
+                    zIndex: 10,
+                    cursor: 'pointer'
                 });
             
             // Color según tipo
@@ -719,6 +779,11 @@
                 case 'audio':
                     $area.css('borderColor', '#ffcc00');
                     break;
+            }
+            
+            // Si es el área seleccionada, resaltarla
+            if (self.selectedArea && self.selectedArea.id === area.id) {
+                $area.addClass('selected');
             }
             
             // Agregar al contenedor
@@ -788,6 +853,7 @@
             
             // Crear objeto de área
             var area = {
+                id: 'area_' + new Date().getTime() + '_' + Math.floor(Math.random() * 1000),
                 type: type,
                 page: self.currentPage,
                 coords: [
@@ -841,8 +907,11 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        // Recargar áreas
-                        self.loadFlipbookData(self.flipbookId);
+                        // Agregar área a la lista local
+                        self.areas.push(area);
+                        
+                        // Renderizar áreas
+                        self.renderAreas();
                         
                         // Limpiar
                         self.drawingArea = false;
@@ -913,11 +982,17 @@
         selectArea: function(id) {
             var self = this;
             
+            console.log('Buscando área con ID:', id);
+            console.log('Áreas disponibles:', self.areas);
+            
             // Buscar área
             var area = self.findAreaById(id);
             if (!area) {
+                console.error('Área no encontrada:', id);
                 return;
             }
+            
+            console.log('Área encontrada:', area);
             
             // Guardar área seleccionada
             self.selectedArea = area;
@@ -940,21 +1015,21 @@
             // Actualizar campos según tipo
             switch (area.type) {
                 case 'url':
-                    $('#vibebook-url-target').val(area.target_url);
+                    $('#vibebook-url-target').val(area.target_url || '');
                     break;
                     
                 case 'youtube':
-                    $('#vibebook-youtube-url').val(area.target_url);
+                    $('#vibebook-youtube-url').val(area.target_url || '');
                     break;
                     
                 case 'internal':
-                    $('#vibebook-internal-page').val(area.target_page);
+                    $('#vibebook-internal-page').val(area.target_page || 1);
                     $('#vibebook-internal-color').val(area.color || 'blue');
                     break;
                     
                 case 'audio':
                     self.selectedAudioId = area.audio_id;
-                    $('#vibebook-audio-autoplay').prop('checked', area.autoplay);
+                    $('#vibebook-audio-autoplay').prop('checked', area.autoplay || false);
                     break;
             }
         },
@@ -986,31 +1061,23 @@
                 return;
             }
             
-            // Eliminar área
-            $.ajax({
-                url: vibeBookFlip.ajaxUrl,
-                type: 'POST',
-                data: {
-                    action: 'vibebook_delete_area',
-                    nonce: vibeBookFlip.nonce,
-                    post_id: self.flipbookId,
-                    area_id: id
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // Recargar áreas
-                        self.loadFlipbookData(self.flipbookId);
-                        
-                        // Limpiar selección
-                        self.selectedArea = null;
-                    } else {
-                        alert('Error al eliminar el área: ' + response.data);
-                    }
-                },
-                error: function() {
-                    alert('Error de conexión al eliminar el área.');
-                }
+            // Eliminar área localmente
+            self.areas = self.areas.filter(function(area) {
+                return area.id !== id;
             });
+            
+            // Renderizar áreas
+            self.renderAreas();
+            
+            // Guardar áreas
+            self.saveAreas();
+            
+            // Limpiar selección
+            self.selectedArea = null;
+            
+            // Ocultar opciones
+            $('.vibebook-tool-options').hide();
+            $('.vibebook-tool-button').removeClass('active');
         },
         
         // Guardar flipbook

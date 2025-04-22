@@ -7,7 +7,7 @@
  * Author: Vibebook
  * Author URI: https://vibebook.com/
  * Text Domain: vibebook-flip
- * Domain Path: /languages
+ * Domain Path: /languages   
  */
 
 // Si este archivo es llamado directamente, abortar.
